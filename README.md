@@ -4,7 +4,7 @@ WARNING:
     The following code stills under development, don't use it for production but for testing purpose.
     It comes with no warranties and should be use with precaution.
 
-    However, if you want to test ```LPG```, follow instructions in INSTALL.
+    However, if you want to test LPG, follow instructions in INSTALL.
 
     For any question or feedback, contact me at :
     <weltrusten@philentropy.org>
