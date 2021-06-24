@@ -21,9 +21,15 @@ class Checker:
         self.homed = self.home + '/'
 
     @classmethod
-    def pcolor(cls, message):
+    def pcolor(cls, message, color):
         """gngngn"""
-        return print("\033[33m{}\033[0m".format(message))
+        if color == "yellow":
+            return print("\033[33m{}\033[0m".format(message))
+        if color == "bright_cyan":
+            return print("\033[1;96m{}\033[0m".format(message))
+        if color == "cyan":
+            return print("\033[36m{}\033[0m".format(message))
+        return None
 
     @classmethod
     def print_yes(cls):
@@ -85,7 +91,7 @@ class Checker:
             lg.warning("%s", error)
 
     def __check_react(self):
-        self.pcolor("NPM is installed : ")
+        self.pcolor("NPM is installed : ", "yellow")
         try:
             which("npm")
             self.print_yes()
@@ -93,7 +99,7 @@ class Checker:
             self.print_no()
             lg.warning("%s", error)
 
-        self.pcolor("NPX is installed : ")
+        self.pcolor("NPX is installed : ", "yellow")
         try:
             which("npx")
             self.print_yes()
@@ -102,19 +108,19 @@ class Checker:
             lg.warning("%s", error)
 
     def __check_symfony(self):
-        self.pcolor("PHP 7.2.5 or higher is installed : ")
+        self.pcolor("PHP 7.2.5 or higher is installed : ", "yellow")
         try:
             self.__check_php_version(self.checkd)
         except ErrorReturnCode as error:
             lg.warning("%s", error)
 
-        self.pcolor("Composer is installed : ")
+        self.pcolor("Composer is installed : ", "yellow")
         try:
             self.__check_composer()
         except ErrorReturnCode as error:
             lg.warning("%s", error)
 
-        input("LPG will run ```symfony check:requirements```, press a key to continue...")
+        input("Press a key to launch dep analysis")
         try:
             arg = ['symfony', 'check:requirements']
             subprocess.run(arg, check=True)
@@ -122,10 +128,43 @@ class Checker:
             lg.critical("%s", error)
 
     def __check_flutter(self):
-        pass
+        self.pcolor("Flutter is installed : ", "yellow")
+        try:
+            flutter_path = which("flutter")
+            self.print_yes()
+            input("Press a key to launch dep analysis")
+            try:
+                arg = [flutter_path, 'doctor']
+                subprocess.run(arg, check=True)
+            except subprocess.SubprocessError as error:
+                lg.warning("%s", error)
+            lg.info("Some packages might miss. Check output and try to run this command again")
+        except ErrorReturnCode as error:
+            lg.warning("%s", error)
+            self.print_no()
 
     def __check_bundle(self):
         """ gngn """
+        bundle = [
+            'react',
+            'symfony',
+            'flutter'
+        ]
+
+        self.pcolor("Checking React, Symfony and Flutter", "bright_cyan")
+        i = 0
+        for item in bundle:
+            #print(item)
+            self.pcolor("Is {} installed ?".format(item), "cyan")
+            if item == "react":
+                self.__check_react()
+            elif item == "symfony":
+                self.__check_symfony()
+            elif item == "flutter":
+                self.__check_flutter()
+            else:
+                raise ErrorReturnCode
+            i += 1
 
     def init_checker(self):
         """ gngn """

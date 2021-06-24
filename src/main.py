@@ -54,7 +54,7 @@ project name.\n")
 
 def show_lpg_header(title):
     """show_lpg_header() : Just a dumb header to print."""
-    return print("<\033[1;96mLight Project Generator -- {}\033[0m".format(title))
+    return print("<\033[1;96mLight Project Generator -- {}\033[0m>".format(title))
 
 def parse_arguments():
     """Setting up the support of CLI arguments"""
