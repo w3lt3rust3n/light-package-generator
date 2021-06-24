@@ -1,14 +1,141 @@
+""" gngn """
+import subprocess
+import re
+import logging as lg
+from os import getenv
+from os import path
+from sh import ErrorReturnCode, which
+
+lg.basicConfig(level=lg.DEBUG)
+
 class Checker:
+    """ gngn """
     LPG_DIR = ".lpg/"
-    CONFIG_DIR = ".lpg/config"
-    
+    CHECK_DIR = ".lpg/check/"
+    SCRIPTS_DIR = ".lpg/scripts"
+
     def __init__(self, lang):
         self.lang = lang
+        self.checkd = self.CHECK_DIR
+        self.home = getenv("HOME")
+        self.homed = self.home + '/'
 
-    def __load_conf_file(self):
+    @classmethod
+    def pcolor(cls, message):
+        """gngngn"""
+        return print("\033[33m{}\033[0m".format(message))
+
+    @classmethod
+    def print_yes(cls):
+        """gngngn"""
+        return print("\033[32mYes\033[0m")
+
+    @classmethod
+    def print_no(cls):
+        """gngngn"""
+        return print("\033[31mNo\033[0m")
+
+    def __check_php_version(self, dest):
+        php_path = which("php")
+        if php_path != "":
+            try:
+                check_dir = (self.homed + dest)
+                if path.exists(check_dir):
+                    check_file = check_dir + 'php-ver.data'
+                    with open(check_file, 'w+') as check_output:
+                        try:
+                            subprocess.run([php_path, '-v'], stdout=check_output, check=True)
+                        except subprocess.SubprocessError as error:
+                            lg.error("Error : %s", error)
+                    script_path = self.homed + self.SCRIPTS_DIR + '/'
+                    script_file = script_path + "lpg-check-php.sh"
+
+                    try:
+                        output_file = check_dir + 'php-ver.tmp'
+                        subprocess.run([script_file, check_file, output_file], check=True)
+
+                        try:
+                            with open(output_file, "r") as output:
+                                str_ver = output.readline()
+                            try:
+                                ver = re.search(r'.\..\...', str_ver) # working here
+                                if ver:
+                                    found = ver.group()
+                            except AttributeError as error:
+                                ver = ''
+                                lg.critical("%s", error)
+
+                            if found < '7.2.5':
+                                lg.warning("PHP is outdated")
+                                self.print_no()
+                            else:
+                                self.print_yes()
+                        except FileNotFoundError as error:
+                            lg.critical("%s", error)
+                    except subprocess.SubprocessError as error:
+                        lg.critical("%s", error)
+            except OSError as error:
+                lg.critical("%s", error)
+
+    def __check_composer(self):
+        try:
+            which("composer")
+            self.print_yes()
+        except ErrorReturnCode as error:
+            lg.warning("%s", error)
+
+    def __check_react(self):
+        self.pcolor("NPM is installed : ")
+        try:
+            which("npm")
+            self.print_yes()
+        except ErrorReturnCode as error:
+            self.print_no()
+            lg.warning("%s", error)
+
+        self.pcolor("NPX is installed : ")
+        try:
+            which("npx")
+            self.print_yes()
+        except ErrorReturnCode as error:
+            self.print_no()
+            lg.warning("%s", error)
+
+    def __check_symfony(self):
+        self.pcolor("PHP 7.2.5 or higher is installed : ")
+        try:
+            self.__check_php_version(self.checkd)
+        except ErrorReturnCode as error:
+            lg.warning("%s", error)
+
+        self.pcolor("Composer is installed : ")
+        try:
+            self.__check_composer()
+        except ErrorReturnCode as error:
+            lg.warning("%s", error)
+
+        input("LPG will run ```symfony check:requirements```, press a key to continue...")
+        try:
+            arg = ['symfony', 'check:requirements']
+            subprocess.run(arg, check=True)
+        except subprocess.SubprocessError as error:
+            lg.critical("%s", error)
+
+    def __check_flutter(self):
         pass
 
-    def init_checker(self, lang):
-        print("Hello from init_checker, let play with {}".format(lang))
+    def __check_bundle(self):
+        """ gngn """
 
-
+    def init_checker(self):
+        """ gngn """
+        if self.lang == 'react':
+            self.__check_react()
+        elif self.lang == 'symfony':
+            self.__check_symfony()
+        elif self.lang == 'flutter':
+            self.__check_flutter()
+        elif self.lang == 'all':
+            self.__check_bundle()
+        else:
+            print("HUmmm")

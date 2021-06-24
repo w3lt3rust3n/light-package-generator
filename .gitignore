@@ -1,1 +1,7 @@
 env
+src/depchecker/__pycache__
+src/depchecker/__pycache__/*
+src/preparator/__pycache__
+src/preparator/__pycache__/*
+src/generator/__pycache__
+src/generator/__pycache__/*

@@ -26,4 +26,4 @@ class Preparator:
         pass
     
     def init_preparator(self, lang):
-        print("Hello from init_preparator")
+        print("Hello from init_preparator, let's play with ".format(lang))
