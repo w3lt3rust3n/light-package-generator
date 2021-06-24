@@ -14,7 +14,7 @@ WARNING:
 # INSTALL
 
 If you don't have the source package yet:
-    ```git clone https://github.com/w3lt3rust3n/light-package-generator.git``
+    ```git clone https://github.com/w3lt3rust3n/light-package-generator.git```
 
 Go inside the directory and run:
     ```chmod +x setup-unstable-lpg-any.sh```
