@@ -14,13 +14,16 @@ WARNING:
 # INSTALL
 
 If you don't have the source package yet:
-    ```git clone https://github.com/w3lt3rust3n/light-package-generator.git```
+```git clone https://github.com/w3lt3rust3n/light-package-generator.git```
 
 Go inside the directory and run:
-    ```chmod +x setup-unstable-lpg-any.sh```
-    ```./setup-unstable-lpg-any.sh```
-    ```pip install -r requirements.txt```
-    ```python src/main.py --info```
+```chmod +x setup-unstable-lpg-any.sh```
+Then :
+```./setup-unstable-lpg-any.sh```
+Then :
+```pip install -r requirements.txt```
+Finally :
+```python src/main.py --info```
 
 If it doesn't work, please send me an email.
 
