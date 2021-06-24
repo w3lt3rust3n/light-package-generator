@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-cd $1 &&
+cd "$1" &&
 flutter channel stable &&
 flutter upgrade &&
-flutter create $2
+flutter create "$2"

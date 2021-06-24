@@ -1,8 +1,27 @@
-# HOW TO INSTALL
+# Light Package Manager
 
-Copy 'lpg' to your home and enter:
-    ```mv lpg .lpg```
+WARNING:
+    The following code stills under development, don't use it for production but for testing purpose.
+    It comes with no warranties and should be use with precaution.
 
-then run :
-    ```pip install -r main.py```
-    
+    However, if you want to test ```LPG```, follow instructions in INSTALL.
+
+    For any question or feedback, contact me at :
+    <weltrusten@philentropy.org>
+
+    Don't forget to read LICENSE.
+
+# INSTALL
+
+If you don't have the source package yet:
+    ```git clone https://github.com/w3lt3rust3n/light-package-generator.git``
+
+Go inside the directory and run:
+    ```chmod +x setup-unstable-lpg-any.sh```
+    ```./setup-unstable-lpg-any.sh```
+    ```pip install -r requirements.txt```
+    ```python src/main.py --info```
+
+If it doesn't work, please send me an email.
+
+Happy Hacking !
