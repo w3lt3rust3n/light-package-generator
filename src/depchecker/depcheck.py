@@ -1,3 +1,22 @@
+#! /usr/bin/env python3
+# coding: utf-8
+
+#---------------------------------------------------------------------
+# # LPG - Light Project Manager, a simple python program for lazy web
+# developers ;)
+#
+# depcheck.py : All that LPG needs to check system for the presence
+# of required stuff and dependencies. 
+#
+# CAUTION : expect unexpected behaviors on Windows machines.
+# May work as expected under GNU/Linux systems.
+#
+# Made with love by Maxence Buisson for the fun of it.
+# Contact : weltrusten@philentropy.org
+#
+# Enjoy !
+#---------------------------------------------------------------------
+
 """ gngn """
 import subprocess
 import re
@@ -5,6 +24,8 @@ import logging as lg
 from os import getenv
 from os import path
 from sh import ErrorReturnCode, which
+
+import utils.utilities as util
 
 lg.basicConfig(level=lg.DEBUG)
 
@@ -19,27 +40,6 @@ class Checker:
         self.checkd = self.CHECK_DIR
         self.home = getenv("HOME")
         self.homed = self.home + '/'
-
-    @classmethod
-    def pcolor(cls, message, color):
-        """gngngn"""
-        if color == "yellow":
-            return print("\033[33m{}\033[0m".format(message))
-        if color == "bright_cyan":
-            return print("\033[1;96m{}\033[0m".format(message))
-        if color == "cyan":
-            return print("\033[36m{}\033[0m".format(message))
-        return None
-
-    @classmethod
-    def print_yes(cls):
-        """gngngn"""
-        return print("\033[32mYes\033[0m")
-
-    @classmethod
-    def print_no(cls):
-        """gngngn"""
-        return print("\033[31mNo\033[0m")
 
     def __check_php_version(self, dest):
         php_path = which("php")
@@ -73,9 +73,9 @@ class Checker:
 
                             if found < '7.2.5':
                                 lg.warning("PHP is outdated")
-                                self.print_no()
+                                util.print_no()
                             else:
-                                self.print_yes()
+                                util.print_yes()
                         except FileNotFoundError as error:
                             lg.critical("%s", error)
                     except subprocess.SubprocessError as error:
@@ -83,40 +83,43 @@ class Checker:
             except OSError as error:
                 lg.critical("%s", error)
 
-    def __check_composer(self):
+    @classmethod
+    def check_composer(cls):
+        """ gngngn """
         try:
             which("composer")
-            self.print_yes()
+            util.print_yes()
         except ErrorReturnCode as error:
             lg.warning("%s", error)
 
-    def __check_react(self):
-        self.pcolor("NPM is installed : ", "yellow")
+    @classmethod
+    def __check_react(cls):
+        util.pcolor("NPM is installed : ", "yellow")
         try:
             which("npm")
-            self.print_yes()
+            util.print_yes()
         except ErrorReturnCode as error:
-            self.print_no()
+            util.print_no()
             lg.warning("%s", error)
 
-        self.pcolor("NPX is installed : ", "yellow")
+        util.pcolor("NPX is installed : ", "yellow")
         try:
             which("npx")
-            self.print_yes()
+            util.print_yes()
         except ErrorReturnCode as error:
-            self.print_no()
+            util.print_no()
             lg.warning("%s", error)
 
     def __check_symfony(self):
-        self.pcolor("PHP 7.2.5 or higher is installed : ", "yellow")
+        util.pcolor("PHP 7.2.5 or higher is installed : ", "yellow")
         try:
             self.__check_php_version(self.checkd)
         except ErrorReturnCode as error:
             lg.warning("%s", error)
 
-        self.pcolor("Composer is installed : ", "yellow")
+        util.pcolor("Composer is installed : ", "yellow")
         try:
-            self.__check_composer()
+            self.check_composer()
         except ErrorReturnCode as error:
             lg.warning("%s", error)
 
@@ -127,11 +130,13 @@ class Checker:
         except subprocess.SubprocessError as error:
             lg.critical("%s", error)
 
-    def __check_flutter(self):
-        self.pcolor("Flutter is installed : ", "yellow")
+    @classmethod
+    def check_flutter(cls):
+        """ gngngn """
+        util.pcolor("Flutter is installed : ", "yellow")
         try:
             flutter_path = which("flutter")
-            self.print_yes()
+            util.print_yes()
             input("Press a key to launch dep analysis")
             try:
                 arg = [flutter_path, 'doctor']
@@ -141,7 +146,7 @@ class Checker:
             lg.info("Some packages might miss. Check output and try to run this command again")
         except ErrorReturnCode as error:
             lg.warning("%s", error)
-            self.print_no()
+            util.print_no()
 
     def __check_bundle(self):
         """ gngn """
@@ -151,17 +156,17 @@ class Checker:
             'flutter'
         ]
 
-        self.pcolor("Checking React, Symfony and Flutter", "bright_cyan")
+        util.pcolor("Checking React, Symfony and Flutter", "bright_cyan")
         i = 0
         for item in bundle:
             #print(item)
-            self.pcolor("Is {} installed ?".format(item), "cyan")
+            util.pcolor("Is {} installed ?".format(item), "cyan")
             if item == "react":
                 self.__check_react()
             elif item == "symfony":
                 self.__check_symfony()
             elif item == "flutter":
-                self.__check_flutter()
+                self.check_flutter()
             else:
                 raise ErrorReturnCode
             i += 1
@@ -173,8 +178,8 @@ class Checker:
         elif self.lang == 'symfony':
             self.__check_symfony()
         elif self.lang == 'flutter':
-            self.__check_flutter()
+            self.check_flutter()
         elif self.lang == 'all':
             self.__check_bundle()
         else:
-            print("HUmmm")
+            print("Hummm")

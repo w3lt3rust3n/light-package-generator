@@ -1,29 +1,29 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-#--------------------------------------------------------------------------------------------------------------
-# LPG - Light Project Manager, a simple python program for lazy web developers ;)
+#---------------------------------------------------------------------
+# # LPG - Light Project Manager, a simple python program for lazy web
+# developers ;)
 #
-# generator.py :
+# generator.py : All that LPG needs to generate project using args
+# given by option -g
 #
-# CAUTION : expect unexpected behaviors on Windows machines. May work as expected under GNU/Linux systems.
+# CAUTION : expect unexpected behaviors on Windows machines.
+# May work as expected under GNU/Linux systems.
 #
 # Made with love by Maxence Buisson for the fun of it.
 # Contact : weltrusten@philentropy.org
 #
 # Enjoy !
-#---------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------
 
+""" gngngn """
 import os
-from sh import mkdir
 import subprocess
-
-# \033[32m -> Green
-# \033[31m -> Red
-# \033[1;96m -> Bold - Bright Cyan
-# \033[36m -> Cyan | \033[4;36m -> Underlined - Cyan
+from sh import mkdir
 
 class Generator:
+    """ gngngn """
     SCRIPTS_DIR = ".lpg/scripts"
 
     def __init__(self, lang, path):
@@ -48,6 +48,7 @@ class Generator:
             print("\033[31mError while executing script, no file !\033[0m")
 
     def project_generator(self):
+        """ gngngn """
         print("\033[36m--> Generating the project...\033[0m")
         if os.path.exists(self.path):
             Generator.__launch_script(self)
@@ -62,4 +63,4 @@ class Generator:
                 print("\033[36m--> Launching script\033[0m")
                 Generator.__launch_script(self)
             else:
-                return False
+                raise OSError

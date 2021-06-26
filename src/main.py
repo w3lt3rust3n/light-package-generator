@@ -24,24 +24,21 @@ from os import getenv
 import generator.generator as pg
 import depchecker.depcheck as dc
 import preparator.preparator as pp
+import utils.utilities as util
 
 # Just a function to display basic informations about how to use LPG.
 # Setting up the username by getting the value from the env with getenv().
 def show_info():
-    # \033[31m -> Red
-    # \033[32m -> Green
-    # \033[1;96m -> Bold - Bright Cyan
-    # \033[36m -> Cyan | \033[4;36m -> Underlined - Cyan
     """Getting the username from environment variables"""
     user = getenv("USER")
-    print("<\033[1;96mLPG - version 0.0.2\033[0m>\n")
+    print("<\033[1;96mLPG - version 0.0.4\033[0m>\n")
     print("Hello \033[36m{}\033[0m, thank you for using the \033[96mLPG\
 \033[0m, the lazy".format(user))
     print("way to start web projects and install what you need if required \
 dependencies are missing.\n")
-    print("\033[4;36mSupports the following technologies:\033[0m")
+    util.pcolor("Supports the following technologies:", "cyan")
     print("ReactJS\nSymfony\nFlutter\n")
-    print("\033[4;36mBasic usage of LPG:\033[0m")
+    util.pcolor("Basic usage of LPG:", "cyan")
     print("Running \033[32mlpg --prepare flutter\033[0m will try to\
 automaticaly install flutter on your system.")
     print("Running \033[32mlpg --checkdep symfony\033[0m will check if you\
@@ -134,11 +131,6 @@ def parse_gen_args(arg):
     else:
         print("{} is not a valid technology, see --help".format(arg))
 
-# We use if/elif/else statements in order to check what action to make from the given arguments.
-#
-# If condition is None: is just a way to make it work, otherwise it fails.
-# This part can be improved later but it works and do what we need to do:
-# execute action given by arguments.
 def main():
     """Parsing given arguments"""
     args = parse_arguments()
