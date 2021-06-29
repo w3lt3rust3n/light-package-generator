@@ -18,11 +18,6 @@ import os
 from sh import mkdir
 import subprocess
 
-# \033[32m -> Green
-# \033[31m -> Red
-# \033[1;96m -> Bold - Bright Cyan
-# \033[36m -> Cyan | \033[4;36m -> Underlined - Cyan
-
 class Generator:
     SCRIPTS_DIR = ".lpg/scripts"
 
