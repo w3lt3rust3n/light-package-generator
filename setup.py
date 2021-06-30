@@ -17,8 +17,8 @@ setuptools.setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GPL 2 License",
-        "Operating System :: GNU/Linux",
+        "License :: OSI Approved :: GPL",
+        "Operating System :: Linux",
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
