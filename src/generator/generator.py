@@ -20,7 +20,13 @@
 """ gngngn """
 import os
 import subprocess
+import logging as lg
+
 from sh import mkdir
+
+import utils.utilities as util
+
+lg.basicConfig(level=lg.DEBUG)
 
 class Generator:
     """ gngngn """
@@ -35,32 +41,32 @@ class Generator:
         home = os.getenv("HOME")
         script_path = home + "/" + self.SCRIPTS_DIR + "/lpg-" + self.lang + "-init.sh"
 
-        print("LPG will create the project {}".format(project_name))
-        print("Location : {}".format(self.path))
-        print("Type : {}".format(self.lang))
+        util.pcolor("LPG will create the project {}".format(project_name), "cyan")
+        util.pcolor("Location : {}".format(self.path), "cyan")
+        util.pcolor("Type : {}".format(self.lang), "cyan")
 
         while input("Confirm ? [y/n]") != 'y':
             return False
 
         try:
-            subprocess.call([script_path, self.path, project_name])
-        except subprocess.CalledProcessError:
-            print("\033[31mError while executing script, no file !\033[0m")
+            subprocess.run(script_path, self.path, project_name, check=True)
+        except subprocess.SubprocessError as error:
+            lg.critical("Error while executing script, no file !", "red")
 
     def project_generator(self):
         """ gngngn """
-        print("\033[36m--> Generating the project...\033[0m")
+        util.pcolor("--> Generating the project...", "cyan")
         if os.path.exists(self.path):
             Generator.__launch_script(self)
         else:
-            print("\033[36m--> Creating project directory.\033[0m ")
+            util.pcolor("--> Creating project directory.", "cyan")
             try:
                 mkdir(self.path)
             except mkdir.ErrorReturnCode_2:
-                print("\033[31mError while creating project directory\033[0m")
+                util.pcolor("Error while creating project directory", "red")
 
             if os.path.exists(self.path):
-                print("\033[36m--> Launching script\033[0m")
+                util.pcolor("--> Launching script", "cyan")
                 Generator.__launch_script(self)
             else:
                 raise OSError

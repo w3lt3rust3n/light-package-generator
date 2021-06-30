@@ -1,3 +1,20 @@
+Metadata-Version: 2.1
+Name: Light-Projects-Generator
+Version: 0.0.4
+Summary: Light Projects Generator is a simple web projects generator supporting Flutter, Symfony and React.
+Home-page: https://github.com/w3lt3rust3n/light-projects-generator
+Author: Philentropy
+Author-email: weltrusten@philentropy.org
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/w3lt3rust3n/light-projects-generator/issues
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GPL 2 License
+Classifier: Operating System :: GNU/Linux
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
 # Light Projects Generator
 
 ## WARNING:
@@ -33,3 +50,4 @@ If it doesn't work, please send me an email.
 ## Usage
 
 Happy Hacking !
+

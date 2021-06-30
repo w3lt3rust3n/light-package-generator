@@ -21,6 +21,7 @@
 import subprocess
 import re
 import logging as lg
+
 from os import getenv
 from os import path
 from sh import ErrorReturnCode, which

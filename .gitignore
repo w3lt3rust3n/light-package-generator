@@ -5,3 +5,8 @@ src/preparator/__pycache__
 src/preparator/__pycache__/*
 src/generator/__pycache__
 src/generator/__pycache__/*
+src/utils/__pycache__
+src/utils/__pycache__/*
+dist/
+dist/*
+lpg.toml

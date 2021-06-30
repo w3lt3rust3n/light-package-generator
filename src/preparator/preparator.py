@@ -1,12 +1,28 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
+#---------------------------------------------------------------------
+# # LPG - Light Project Manager, a simple python program for lazy web
+# developers ;)
+#
+# preparator.py : All that LPG needs to install required stuff 
+# and dependencies. 
+#
+# CAUTION : expect unexpected behaviors on Windows machines.
+# May work as expected under GNU/Linux systems.
+#
+# Made with love by Maxence Buisson for the fun of it.
+# Contact : weltrusten@philentropy.org
+#
+# Enjoy !
+#---------------------------------------------------------------------
+
 """gngng"""
 import subprocess
 import logging as lg
 from os import path, getenv, mkdir
 from sh import ErrorReturnCode, which
-import depchecker.depcheck as dc
+import utils.utilities as util
 
 class Preparator:
     """gngngng"""
@@ -15,7 +31,7 @@ class Preparator:
 
     def __init__(self, lang):
         self.lang = lang
-        self.util = dc.Checker(lang)
+        # self.util = util.Checker(lang)
 
     @classmethod
     def __load_cfg(cls):
@@ -55,11 +71,11 @@ class Preparator:
 
         with open(conf_file, 'w+') as cfg:
             cfg.write(content)
-        self.util.pcolor("Done", "green")
+        util.pcolor("Done", "green")
 
     @classmethod
     def __edit_bashrc(cls):
-        util = dc.Checker()
+        #util = cls.util.Checker()
         home = getenv('HOME')
         conf_dir_path = home + '/'
         bashrc_file = ".bashrc"
@@ -79,7 +95,7 @@ class Preparator:
 
     @classmethod
     def __init_flutter_precache(cls, flutter_path):
-        util = dc.Checker()
+        #util = cls.util.Checker()
         flutter_full_path = flutter_path + "/bin/flutter"
         arg = [flutter_full_path, "precache"]
         doctor = [flutter_full_path, "doctor"]
@@ -100,20 +116,20 @@ class Preparator:
         
     def _get_flutter_src(self):
         home = getenv("HOME")
-        self.util.pcolor("Download Flutter at ({} if left blank):".format(home), "cyan")
+        util.pcolor("Download Flutter at ({} if left blank):".format(home), "cyan")
         flutter_git_path = input("@ ")
         if flutter_git_path == '':
-            self.util.pcolor("Default path will be used to clone Flutter", "cyan")
+            util.pcolor("Default path will be used to clone Flutter", "cyan")
             flutter_git_path = home
         if path.exists(flutter_git_path):
-            self.util.pcolor("flutter will be cloned at {}".format(flutter_git_path), "cyan")
+            util.pcolor("flutter will be cloned at {}".format(flutter_git_path), "cyan")
         else:
             try:
                 mkdir(flutter_git_path)
             except ErrorReturnCode as error:
                 raise error
 
-            self.util.pcolor("flutter will be cloned at {}".format(flutter_git_path), "cyan")
+            util.pcolor("flutter will be cloned at {}".format(flutter_git_path), "cyan")
 
         git_cmd_args = [
             'git', '-C', flutter_git_path, 'clone',
@@ -136,21 +152,21 @@ class Preparator:
         if lang == "flutter":
             self.util.pcolor("Is Git installed ?", "yellow")
             if self.is_git_installed() is True:
-                self.util.print_yes()
+                util.print_yes()
             else:
-                self.util.print_no()
-            self.util.pcolor("--> Cloning Flutter stable git repository", "yellow")
+                util.print_no()
+            util.pcolor("--> Cloning Flutter stable git repository", "yellow")
             try:
                 self._get_flutter_src()
-                self.util.pcolor("Flutter source successfuly cloned", "green")
+                util.pcolor("Flutter source successfuly cloned", "green")
             except:
-                self.util.pcolor("Something went wrong during cloning process.", "red")
-            self.util.pcolor("--> Editing the bashrc", "yellow")
+                util.pcolor("Something went wrong during cloning process.", "red")
+            util.pcolor("--> Editing the bashrc", "yellow")
             try:
                 self.__edit_bashrc()
-                self.util.pcolor("Path is set", "green")
+                util.pcolor("Path is set", "green")
             except:
-                self.util.pcolor("Something went wrong during path edit", "red")
+                util.pcolor("Something went wrong during path edit", "red")
 
             # if self._get_flutter_src() is True:
             #     self.util.pcolor("Flutter source successfuly cloned", "green")
