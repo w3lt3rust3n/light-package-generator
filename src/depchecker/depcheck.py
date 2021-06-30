@@ -35,7 +35,7 @@ class Checker:
     CHECK_DIR = ".lpg/check/"
     SCRIPTS_DIR = ".lpg/scripts"
 
-    def __init__(self, lang):
+    def __init__(self, lang=""):
         self.lang = lang
         self.checkd = self.CHECK_DIR
         self.home = getenv("HOME")

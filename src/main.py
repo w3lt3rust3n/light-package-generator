@@ -83,9 +83,8 @@ def parse_prep_args(arg):
         show_lpg_header("Installing the bundle")
         installer = pp.Preparator(arg)
         installer.init_preparator(arg)
-    else :
-        print("{} is not a valid technology to intall\
-, see --help.".format(arg))
+    # else :
+    #     print("Exiting LPG...")
 
 def parse_check_args(arg):
     """Checking arg for header"""
@@ -110,21 +109,18 @@ def parse_check_args(arg):
 
 def parse_gen_args(arg):
     """Checking arguments for header and generator"""
-    if arg == "react":
-        lang = arg[0]
-        path = arg[1]
+    #import pdb; pdb.set_trace()
+    lang = arg[0]
+    path = arg[1]
+    if lang == "react":
         show_lpg_header("Generate React project")
         generate_project = pg.Generator(lang, path)
         generate_project.project_generator()
-    elif arg == "symfony":
-        lang = arg[0]
-        path = arg[1]
+    elif lang == "symfony":
         show_lpg_header("Generate Symfony project")
         generate_project = pg.Generator(lang, path)
         generate_project.project_generator()
     elif arg == "flutter":
-        lang = arg[0]
-        path = arg[1]
         show_lpg_header("Generate Flutter project")
         generate_project = pg.Generator(lang, path)
         generate_project.project_generator()
@@ -140,7 +136,7 @@ def main():
     elif args.info:
         show_info()
     elif args.prepare:
-        arg = args.prepare
+        arg = args.prepare[0]
         parse_prep_args(arg)
     elif args.generate:
         arg = args.generate
