@@ -1,4 +1,0 @@
-depchecker
-generator
-preparator
-utils

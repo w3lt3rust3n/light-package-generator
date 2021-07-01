@@ -1,21 +1,21 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-#---------------------------------------------------------------------
-# # LPG - Light Project Manager, a simple python program for lazy web
+#------------------------------------------------------------------------------
+# LPG - Light Projects Generator, a simple python package for lazy web
 # developers ;)
 #
 # generator.py : All that LPG needs to generate project using args
 # given by option -g
 #
-# CAUTION : expect unexpected behaviors on Windows machines.
-# May work as expected under GNU/Linux systems.
+# CAUTION : expect unexpected behaviors on Windows machines. May work as
+# expected under GNU/Linux systems.
 #
 # Made with love by Maxence Buisson for the fun of it.
 # Contact : weltrusten@philentropy.org
 #
 # Enjoy !
-#---------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 """ gngngn """
 import os

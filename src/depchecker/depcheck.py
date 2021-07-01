@@ -1,12 +1,12 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-#---------------------------------------------------------------------
-# # LPG - Light Project Manager, a simple python program for lazy web
+#------------------------------------------------------------------------------
+# LPG - Light Projects Generator, a simple python package for lazy web
 # developers ;)
 #
 # depcheck.py : All that LPG needs to check system for the presence
-# of required stuff and dependencies. 
+# of required stuff and dependencies.
 #
 # CAUTION : expect unexpected behaviors on Windows machines.
 # May work as expected under GNU/Linux systems.
@@ -15,7 +15,7 @@
 # Contact : weltrusten@philentropy.org
 #
 # Enjoy !
-#---------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 """ gngn """
 import subprocess
@@ -116,12 +116,14 @@ class Checker:
         try:
             self.__check_php_version(self.checkd)
         except ErrorReturnCode as error:
+            util.print_no()
             lg.warning("%s", error)
 
         util.pcolor("Composer is installed : ", "yellow")
         try:
             self.check_composer()
         except ErrorReturnCode as error:
+            util.print_no()
             lg.warning("%s", error)
 
         input("Press a key to launch dep analysis")

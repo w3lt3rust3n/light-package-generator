@@ -2,7 +2,7 @@
 # coding: utf-8
 
 #------------------------------------------------------------------------------
-# LPG - Light Project Manager, a simple python program for lazy web
+# LPG - Light Projects Generator, a simple python package for lazy web
 # developers ;)
 #
 # main.py :
@@ -51,11 +51,11 @@ project name.\n")
 
 def show_lpg_header(title):
     """show_lpg_header() : Just a dumb header to print."""
-    return print("<\033[1;96mLight Project Generator -- {}\033[0m>".format(title))
+    return print("<\033[1;96mLight Projects Generator -- {}\033[0m>".format(title))
 
 def parse_arguments():
     """Setting up the support of CLI arguments"""
-    parser = argparse.ArgumentParser(prog='lpg', description='Light way to \
+    parser = argparse.ArgumentParser(prog='src/main.py', description='Light way to \
 generate web projects using CLI')
     parser.add_argument('--checkdep', '-c', help='Check dep')
     parser.add_argument('--info', '-i', help='Show informations about LPG', action='store_true')
@@ -83,8 +83,6 @@ def parse_prep_args(arg):
         show_lpg_header("Installing the bundle")
         installer = pp.Preparator(arg)
         installer.init_preparator(arg)
-    # else :
-    #     print("Exiting LPG...")
 
 def parse_check_args(arg):
     """Checking arg for header"""
@@ -109,7 +107,6 @@ def parse_check_args(arg):
 
 def parse_gen_args(arg):
     """Checking arguments for header and generator"""
-    #import pdb; pdb.set_trace()
     lang = arg[0]
     path = arg[1]
     if lang == "react":

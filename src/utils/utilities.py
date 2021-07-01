@@ -2,7 +2,7 @@
 # coding: utf-8
 
 #------------------------------------------------------------------------------
-# LPG - Light Project Manager, a simple python program for lazy web
+# LPG - Light Projects Generator, a simple python package for lazy web
 # developers ;)
 #
 # main.py :
