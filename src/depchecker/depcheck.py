@@ -68,15 +68,15 @@ class Checker:
                                 ver = re.search(r'.\..\...', str_ver) # working here
                                 if ver:
                                     found = ver.group()
+                                    if found < '7.2.5':
+                                        lg.warning("PHP is outdated")
+                                        util.print_no()
+                                    else:
+                                        util.print_yes()
                             except AttributeError as error:
                                 ver = ''
                                 lg.critical("%s", error)
 
-                            if found < '7.2.5':
-                                lg.warning("PHP is outdated")
-                                util.print_no()
-                            else:
-                                util.print_yes()
                         except FileNotFoundError as error:
                             lg.critical("%s", error)
                     except subprocess.SubprocessError as error:

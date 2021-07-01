@@ -39,8 +39,8 @@ class Generator:
     def __launch_script(self):
         project_name = input("Set a project name : ")
         home = os.getenv("HOME")
-        script_path = home + "/" + self.SCRIPTS_DIR + "/lpg-" + self.lang + "-init.sh"
-
+        script_path = [home + "/" + self.SCRIPTS_DIR + "/lpg-" + self.lang + "-init.sh", self.path, project_name]
+        import pdb; pdb.set_trace()
         util.pcolor("LPG will create the project {}".format(project_name), "cyan")
         util.pcolor("Location : {}".format(self.path), "cyan")
         util.pcolor("Type : {}".format(self.lang), "cyan")
@@ -49,7 +49,7 @@ class Generator:
             return False
 
         try:
-            subprocess.run(script_path, self.path, project_name, check=True)
+            subprocess.run(script_path, check=True)
         except subprocess.SubprocessError as error:
             lg.critical("Error while executing script, no file !", "red")
 

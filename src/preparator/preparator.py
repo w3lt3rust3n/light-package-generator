@@ -31,8 +31,7 @@ class Preparator:
 
     def __init__(self, lang):
         self.lang = lang
-        # self.util = util.Checker(lang)
-
+        
     @classmethod
     def __load_cfg(cls):
         home = getenv('HOME')
@@ -75,7 +74,6 @@ class Preparator:
 
     @classmethod
     def __edit_bashrc(cls):
-        #util = cls.util.Checker()
         home = getenv('HOME')
         conf_dir_path = home + '/'
         bashrc_file = ".bashrc"
@@ -95,10 +93,8 @@ class Preparator:
 
     @classmethod
     def __init_flutter_precache(cls, flutter_path):
-        #util = cls.util.Checker()
         flutter_full_path = flutter_path + "/bin/flutter"
         arg = [flutter_full_path, "precache"]
-        doctor = [flutter_full_path, "doctor"]
 
         util.pcolor("Precache in progress...", "yellow")
         try:
@@ -106,6 +102,13 @@ class Preparator:
         except subprocess.SubprocessError as error:
             lg.critical("%s", error)
             raise error
+        return True
+        
+    @classmethod
+    def __init_flutter_doctor(cls, flutter_path):
+        flutter_full_path = flutter_path + "/bin/flutter"
+        doctor = [flutter_full_path, "doctor"]
+
         util.pcolor("Running doctor...", "yellow")
         try:
             subprocess.run(doctor, check=True)
@@ -113,7 +116,7 @@ class Preparator:
             lg.critical("%s", error)
             raise error
         return True
-        
+
     def _get_flutter_src(self):
         home = getenv("HOME")
         util.pcolor("Download Flutter at ({} if left blank):".format(home), "cyan")
@@ -129,7 +132,7 @@ class Preparator:
             except ErrorReturnCode as error:
                 raise error
 
-            util.pcolor("flutter will be cloned at {}".format(flutter_git_path), "cyan")
+            util.pcolor("Flutter will be cloned at {}".format(flutter_git_path), "cyan")
 
         git_cmd_args = [
             'git', '-C', flutter_git_path, 'clone',
@@ -142,6 +145,7 @@ class Preparator:
             flutter_git_full_path = flutter_git_path + "/flutter"
             self.__set_flutter_path(flutter_git_full_path)
             self.__init_flutter_precache(flutter_git_full_path)
+            self.__init_flutter_doctor(flutter_git_full_path)
         except subprocess.SubprocessError as error:
             lg.critical("%s", error)
             raise error
@@ -150,7 +154,7 @@ class Preparator:
     def init_preparator(self, lang):
         """gngngn"""
         if lang == "flutter":
-            self.util.pcolor("Is Git installed ?", "yellow")
+            util.pcolor("Is Git installed ?", "yellow")
             if self.is_git_installed() is True:
                 util.print_yes()
             else:
@@ -167,19 +171,6 @@ class Preparator:
                 util.pcolor("Path is set", "green")
             except:
                 util.pcolor("Something went wrong during path edit", "red")
-
-            # if self._get_flutter_src() is True:
-            #     self.util.pcolor("Flutter source successfuly cloned", "green")
-            # else:
-            #     self.util.pcolor("Something went wrong during cloning process.", "red")
-            # if self.__edit_bashrc() is True:
-            #     self.util.pcolor("Path is set", "green")
-            # else:
-            #     self.util.pcolor("Something went wrong during path edit", "red")
-            # # if self.__init_flutter_precache() is True:
-            # #     self.util.pcolor("Precache is done", "green")
-            # # else:
-            # #     self.util.pcolor("Something went wrong during precache", "red")
         elif lang == "react":
             pass
         elif lang == "symfony":

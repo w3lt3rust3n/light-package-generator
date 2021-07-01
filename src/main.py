@@ -120,7 +120,7 @@ def parse_gen_args(arg):
         show_lpg_header("Generate Symfony project")
         generate_project = pg.Generator(lang, path)
         generate_project.project_generator()
-    elif arg == "flutter":
+    elif lang == "flutter":
         show_lpg_header("Generate Flutter project")
         generate_project = pg.Generator(lang, path)
         generate_project.project_generator()
