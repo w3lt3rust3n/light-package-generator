@@ -22,39 +22,44 @@ import os
 import subprocess
 import logging as lg
 
-from sh import mkdir
+from os import mkdir
 
 import utils.utilities as util
 
 lg.basicConfig(level=lg.DEBUG)
 
 class Generator:
-    """ gngngn """
+    """ Generator is the class that contains features to generate
+    web projects """
     SCRIPTS_DIR = ".lpg/scripts"
 
     def __init__(self, lang, path):
         self.lang = lang
         self.path = path
+        self.home = os.getenv("HOME")
 
     def __launch_script(self):
         project_name = input("Set a project name : ")
-        home = os.getenv("HOME")
-        script_path = [home + "/" + self.SCRIPTS_DIR + "/lpg-" + self.lang + "-init.sh", self.path, project_name]
-        import pdb; pdb.set_trace()
+        home = self.home
+        script_path = [
+            home + "/" + self.SCRIPTS_DIR + "/lpg-" + self.lang + "-init.sh",
+            self.path,
+            project_name
+        ]
         util.pcolor("LPG will create the project {}".format(project_name), "cyan")
         util.pcolor("Location : {}".format(self.path), "cyan")
         util.pcolor("Type : {}".format(self.lang), "cyan")
 
-        while input("Confirm ? [y/n]") != 'y':
-            return False
-
-        try:
-            subprocess.run(script_path, check=True)
-        except subprocess.SubprocessError as error:
-            lg.critical("Error while executing script, no file !", "red")
+        if input("Confirm ? [y/n]") != 'y':
+            lg.info("Cancelling...")
+        else:
+            try:
+                subprocess.run(script_path, check=True)
+            except subprocess.SubprocessError as error:
+                lg.critical("%s", error)
 
     def project_generator(self):
-        """ gngngn """
+        """ Generate the given project """
         util.pcolor("--> Generating the project...", "cyan")
         if os.path.exists(self.path):
             Generator.__launch_script(self)
@@ -62,11 +67,12 @@ class Generator:
             util.pcolor("--> Creating project directory.", "cyan")
             try:
                 mkdir(self.path)
-            except mkdir.ErrorReturnCode_2:
-                util.pcolor("Error while creating project directory", "red")
+            except OSError as error:
+                lg.critical("%s", error)
 
             if os.path.exists(self.path):
                 util.pcolor("--> Launching script", "cyan")
                 Generator.__launch_script(self)
             else:
+                lg.critical("%s", error)
                 raise OSError

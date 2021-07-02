@@ -8,16 +8,13 @@
 # main.py :
 # Code to handle arguments and misc CLI features.
 #
-# CAUTION : expect unexpected behaviors on Windows machines. May work as
-# expected under GNU/Linux systems.
-#
 # Made with love by Maxence Buisson for the fun of it.
 # Contact : weltrusten@philentropy.org
 #
 # Enjoy !
 #------------------------------------------------------------------------------
 
-"""Importing argparse to work with CLI arguments."""
+""" Importing argparse to work with CLI arguments. """
 import argparse
 from os import getenv
 
@@ -29,7 +26,7 @@ import utils.utilities as util
 # Just a function to display basic informations about how to use LPG.
 # Setting up the username by getting the value from the env with getenv().
 def show_info():
-    """Getting the username from environment variables"""
+    """ Getting the username from environment variables """
     user = getenv("USER")
     print("<\033[1;96mLPG - version 0.0.4\033[0m>\n")
     print("Hello \033[36m{}\033[0m, thank you for using the \033[96mLPG\
@@ -50,11 +47,11 @@ project name.\n")
     print("Use \033[32mlpg --help\033[0m or \033[32mlpg -h\033[0m for help")
 
 def show_lpg_header(title):
-    """show_lpg_header() : Just a dumb header to print."""
+    """ show_lpg_header() : Just a dumb header to print. """
     return print("<\033[1;96mLight Projects Generator -- {}\033[0m>".format(title))
 
 def parse_arguments():
-    """Setting up the support of CLI arguments"""
+    """ Setting up the support of CLI arguments """
     parser = argparse.ArgumentParser(prog='src/main.py', description='Light way to \
 generate web projects using CLI')
     parser.add_argument('--checkdep', '-c', help='Check dep')
@@ -66,7 +63,7 @@ with the given technology and path')
     return parser.parse_args()
 
 def parse_prep_args(arg):
-    """Checking arg for header"""
+    """ Checking arg for header """
     if arg == "react":
         show_lpg_header("Installing React")
         installer = pp.Preparator(arg)
@@ -106,7 +103,7 @@ def parse_check_args(arg):
         print("{} is not a valid technology, see --help or --info".format(arg))
 
 def parse_gen_args(arg):
-    """Checking arguments for header and generator"""
+    """ Checking arguments for header and generator """
     lang = arg[0]
     path = arg[1]
     if lang == "react":
@@ -125,7 +122,7 @@ def parse_gen_args(arg):
         print("{} is not a valid technology, see --help".format(arg))
 
 def main():
-    """Parsing given arguments"""
+    """ Parsing given arguments """
     args = parse_arguments()
     if args.checkdep:
         arg = args.checkdep

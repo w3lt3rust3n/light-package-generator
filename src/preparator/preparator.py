@@ -5,8 +5,8 @@
 # # LPG - Light Projects Generator, a simple python package for lazy web
 # developers ;)
 #
-# preparator.py : All that LPG needs to install required stuff 
-# and dependencies. 
+# preparator.py : All that LPG needs to install required stuff
+# and dependencies.
 #
 # CAUTION : expect unexpected behaviors on Windows machines.
 # May work as expected under GNU/Linux systems.
@@ -17,24 +17,27 @@
 # Enjoy !
 #------------------------------------------------------------------------------
 
-"""gngng"""
+""" Import needed modules and libs """
+import sys
 import subprocess
+
 import logging as lg
 from os import path, getenv, mkdir
 from sh import ErrorReturnCode, which
+
 import utils.utilities as util
 
 class Preparator:
-    """gngngng"""
+    """ This class contains features to install the given technology """
     LPG_DIR = "/.lpg/"
     CONFIG_DIR = "/.lpg/config"
 
     def __init__(self, lang):
         self.lang = lang
-        
-    @classmethod
-    def __load_cfg(cls):
-        home = getenv('HOME')
+        self.home = getenv('HOME')
+
+    def __load_cfg(self):
+        home = self.home
         conf_dir_path = home + '/'
         bashrc_file = ".bashrc"
         conf_file = conf_dir_path + bashrc_file
@@ -52,16 +55,21 @@ class Preparator:
 
     @classmethod
     def is_git_installed(cls):
-        """gngng"""
+        """ Simple verification """
         try:
-            which("git")
+            git_bin_path = which("git")
+            if git_bin_path is None:
+                lg.critical("Error trying to get Git binary path")
+                sys.exit()
+            else:
+                util.print_yes()
         except ErrorReturnCode as error:
-            print("%s", error)
-            raise error
+            lg.critical("%s", error)
+            sys.exit()
         return True
 
     def __set_flutter_path(self, flutter_path):
-        home = getenv('HOME')
+        home = self.home
         conf_dir = self.CONFIG_DIR
         conf_dir_path = home + conf_dir + '/'
         conf_file = conf_dir_path + "flutter.ini"
@@ -72,9 +80,8 @@ class Preparator:
             cfg.write(content)
         util.pcolor("Done", "green")
 
-    @classmethod
-    def __edit_bashrc(cls):
-        home = getenv('HOME')
+    def __edit_bashrc(self):
+        home = self.home
         conf_dir_path = home + '/'
         bashrc_file = ".bashrc"
         conf_file = conf_dir_path + bashrc_file
@@ -83,7 +90,7 @@ class Preparator:
         if path.exists(conf_file):
             try:
                 subprocess.run(arg, check=True)
-                cls.__load_cfg()
+                self.__load_cfg()
             except subprocess.SubprocessError as error:
                 lg.critical("%s", error)
                 raise error
@@ -97,13 +104,14 @@ class Preparator:
         arg = [flutter_full_path, "precache"]
 
         util.pcolor("Precache in progress...", "yellow")
+        import pdb; pdb.set_trace()
         try:
             subprocess.run(arg, check=True)
         except subprocess.SubprocessError as error:
             lg.critical("%s", error)
             raise error
         return True
-        
+
     @classmethod
     def __init_flutter_doctor(cls, flutter_path):
         flutter_full_path = flutter_path + "/bin/flutter"
@@ -114,11 +122,11 @@ class Preparator:
             subprocess.run(doctor, check=True)
         except subprocess.SubprocessError as error:
             lg.critical("%s", error)
-            raise error
+            raise
         return True
 
     def _get_flutter_src(self):
-        home = getenv("HOME")
+        home = self.home
         util.pcolor("Download Flutter at ({} if left blank):".format(home), "cyan")
         flutter_git_path = input("@ ")
         if flutter_git_path == '':
@@ -130,7 +138,8 @@ class Preparator:
             try:
                 mkdir(flutter_git_path)
             except ErrorReturnCode as error:
-                raise error
+                lg.critical("%s", error)
+                raise
 
             util.pcolor("Flutter will be cloned at {}".format(flutter_git_path), "cyan")
 
@@ -142,8 +151,11 @@ class Preparator:
 
         try:
             subprocess.run(git_cmd_args, check=True)
+            util.pcolor("Flutter source successfuly cloned", "green")
             flutter_git_full_path = flutter_git_path + "/flutter"
             self.__set_flutter_path(flutter_git_full_path)
+            self.__edit_bashrc()
+            self.__load_cfg()
             self.__init_flutter_precache(flutter_git_full_path)
             self.__init_flutter_doctor(flutter_git_full_path)
         except subprocess.SubprocessError as error:
@@ -152,25 +164,18 @@ class Preparator:
         return True
 
     def init_preparator(self, lang):
-        """gngngn"""
+        """ Initiate and execute requested tasks to install the given 
+        technology """
         if lang == "flutter":
             util.pcolor("Is Git installed ?", "yellow")
-            if self.is_git_installed() is True:
-                util.print_yes()
-            else:
-                util.print_no()
+            self.is_git_installed()
             util.pcolor("--> Cloning Flutter stable git repository", "yellow")
             try:
                 self._get_flutter_src()
-                util.pcolor("Flutter source successfuly cloned", "green")
             except:
                 util.pcolor("Something went wrong during cloning process.", "red")
+                raise
             util.pcolor("--> Editing the bashrc", "yellow")
-            try:
-                self.__edit_bashrc()
-                util.pcolor("Path is set", "green")
-            except:
-                util.pcolor("Something went wrong during path edit", "red")
         elif lang == "react":
             pass
         elif lang == "symfony":

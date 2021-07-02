@@ -5,7 +5,7 @@
 # LPG - Light Projects Generator, a simple python package for lazy web
 # developers ;)
 #
-# main.py :
+# utilities.py :
 # Code to handle arguments and misc CLI features.
 #
 # CAUTION : expect unexpected behaviors on Windows machines. May work as
@@ -17,10 +17,22 @@
 # Enjoy !
 #------------------------------------------------------------------------------
 
+# ASCII colors used :
+#   yellow = \033[33m
+#   red = \033[31m
+#   green = \033[32m
+#   cyan = \033[36m
+#   underlined cyan = \033[4;36m
+#   bright cyan = \033[1;96m
+
+""" Contains pcolor(), print_yes() and print_no() """
 def pcolor(message, color):
-    """gngngn"""
+    """ Color print outputs in red, green, cyan, bright cyan, yellow and
+    underlined cyan """
     if color == "yellow":
         return print("\033[33m{}\033[0m".format(message))
+    if color == "red":
+        return print("\033[31m{}\033[0m".format(message))
     if color == "bright_cyan":
         return print("\033[1;96m{}\033[0m".format(message))
     if color == "cyan":
@@ -29,12 +41,12 @@ def pcolor(message, color):
         return print("\033[32m{}\033[0m".format(message))
     if color == "u_cyan":
         return print("\033[4;36m{}\033[0m".format(message))
-    return None
+    return print("\033[0m{}".format(message))
 
 def print_yes():
-    """gngngn"""
+    """ Print a green 'Yes' using pcolor """
     return pcolor("Yes", "green")
 
 def print_no():
-    """gngngn"""
+    """ Print a red 'No' using pcolor """
     return pcolor("No", "red")

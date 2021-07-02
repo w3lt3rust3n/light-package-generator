@@ -17,22 +17,22 @@
 # Enjoy !
 #------------------------------------------------------------------------------
 
-""" gngn """
+""" Importing required libs and modules """
 import subprocess
-import re
+import sys
 import logging as lg
 
-from os import getenv
-from os import path
+from os import getenv, path
 from sh import ErrorReturnCode, which
+
 
 import utils.utilities as util
 
 lg.basicConfig(level=lg.DEBUG)
 
 class Checker:
-    """ gngn """
-    LPG_DIR = ".lpg/"
+    """ Checker class contains all the features to check your system for React,
+    Symfony and Flutter """
     CHECK_DIR = ".lpg/check/"
     SCRIPTS_DIR = ".lpg/scripts"
 
@@ -42,86 +42,52 @@ class Checker:
         self.home = getenv("HOME")
         self.homed = self.home + '/'
 
-    def __check_php_version(self, dest):
-        php_path = which("php")
-        if php_path != "":
-            try:
-                check_dir = (self.homed + dest)
-                if path.exists(check_dir):
-                    check_file = check_dir + 'php-ver.data'
-                    with open(check_file, 'w+') as check_output:
-                        try:
-                            subprocess.run([php_path, '-v'], stdout=check_output, check=True)
-                        except subprocess.SubprocessError as error:
-                            lg.error("Error : %s", error)
-                    script_path = self.homed + self.SCRIPTS_DIR + '/'
-                    script_file = script_path + "lpg-check-php.sh"
-
-                    try:
-                        output_file = check_dir + 'php-ver.tmp'
-                        subprocess.run([script_file, check_file, output_file], check=True)
-
-                        try:
-                            with open(output_file, "r") as output:
-                                str_ver = output.readline()
-                            try:
-                                ver = re.search(r'.\..\...', str_ver) # working here
-                                if ver:
-                                    found = ver.group()
-                                    if found < '7.2.5':
-                                        lg.warning("PHP is outdated")
-                                        util.print_no()
-                                    else:
-                                        util.print_yes()
-                            except AttributeError as error:
-                                ver = ''
-                                lg.critical("%s", error)
-
-                        except FileNotFoundError as error:
-                            lg.critical("%s", error)
-                    except subprocess.SubprocessError as error:
-                        lg.critical("%s", error)
-            except OSError as error:
-                lg.critical("%s", error)
+    @classmethod
+    def __check_composer(cls):
+        """ Verify if Composer is installed on the system """
+        composer_bin_path = which("composer")
+        if composer_bin_path is None:
+            lg.critical("Can't get Composer binary path. Please report the issue (see -i)")
+            sys.exit()
+        else:
+            if path.exists(composer_bin_path):
+                util.print_yes()
+            else:
+                util.print_no()
+                lg.warning("Composer is not installed")
 
     @classmethod
-    def check_composer(cls):
-        """ gngngn """
-        try:
-            which("composer")
-            util.print_yes()
-        except ErrorReturnCode as error:
-            lg.warning("%s", error)
+    def check_react(cls):
+        """ React projects need NPM and NPX in order to be generated """
+        util.pcolor("Is NPM installed ?", "yellow")
+        npm_bin_path = which("npm")
+        if npm_bin_path is None:
+            lg.critical("Can't get npm binary path. Please report the issue (see -i)")
+            sys.exit()
+        else:
+            if path.exists(npm_bin_path):
+                util.print_yes()
+            else:
+                util.print_no()
+                lg.warning("npm is not installed")
 
-    @classmethod
-    def __check_react(cls):
-        util.pcolor("NPM is installed : ", "yellow")
-        try:
-            which("npm")
-            util.print_yes()
-        except ErrorReturnCode as error:
-            util.print_no()
-            lg.warning("%s", error)
+        util.pcolor("Is NPX installed ?", "yellow")
+        npx_bin_path = which("npx")
+        if npx_bin_path is None:
+            lg.critical("Can't get npx binary path. Please report the issue (see -i)")
+            sys.exit()
+        else:
+            if path.exists(npx_bin_path):
+                util.print_yes()
+            else:
+                util.print_no()
+                lg.warning("npx is not installed")
 
-        util.pcolor("NPX is installed : ", "yellow")
+    def check_symfony(self):
+        """ Symfony projects need Composer in order to be generated """
+        util.pcolor("Is Composer installed : ", "yellow")
         try:
-            which("npx")
-            util.print_yes()
-        except ErrorReturnCode as error:
-            util.print_no()
-            lg.warning("%s", error)
-
-    def __check_symfony(self):
-        util.pcolor("PHP 7.2.5 or higher is installed : ", "yellow")
-        try:
-            self.__check_php_version(self.checkd)
-        except ErrorReturnCode as error:
-            util.print_no()
-            lg.warning("%s", error)
-
-        util.pcolor("Composer is installed : ", "yellow")
-        try:
-            self.check_composer()
+            self.__check_composer()
         except ErrorReturnCode as error:
             util.print_no()
             lg.warning("%s", error)
@@ -135,24 +101,31 @@ class Checker:
 
     @classmethod
     def check_flutter(cls):
-        """ gngngn """
-        util.pcolor("Flutter is installed : ", "yellow")
-        try:
-            flutter_path = which("flutter")
-            util.print_yes()
-            input("Press a key to launch dep analysis")
-            try:
-                arg = [flutter_path, 'doctor']
-                subprocess.run(arg, check=True)
-            except subprocess.SubprocessError as error:
-                lg.warning("%s", error)
-            lg.info("Some packages might miss. Check output and try to run this command again")
-        except ErrorReturnCode as error:
-            lg.warning("%s", error)
-            util.print_no()
+        """ Verify if Flutter is installed on the system """
+        util.pcolor("Is Flutter installed ?", "yellow")
+        flutter_bin_path = which("flutter")
+        if flutter_bin_path is None:
+            lg.critical("Can't get Flutter binary path. Please report the issue (see -i)")
+            sys.exit()
+        else:
+            if path.exists(flutter_bin_path):
+                util.print_yes()
+            else:
+                util.print_no()
+                lg.warning("Flutter is not installed")
 
-    def __check_bundle(self):
-        """ gngn """
+        input("Press a key to launch dep analysis")
+        arg = [flutter_bin_path, 'doctor']
+
+        try:
+            subprocess.run(arg, check=True)
+        except subprocess.SubprocessError as error:
+            lg.warning("%s", error)
+
+        lg.info("Some packages might miss. Check output and try to run this command again")
+
+    def check_bundle(self):
+        """ Verify if React, Symfony and Flutter are installed on the system """
         bundle = [
             'react',
             'symfony',
@@ -162,12 +135,11 @@ class Checker:
         util.pcolor("Checking React, Symfony and Flutter", "bright_cyan")
         i = 0
         for item in bundle:
-            #print(item)
             util.pcolor("Is {} installed ?".format(item), "cyan")
             if item == "react":
-                self.__check_react()
+                self.check_react()
             elif item == "symfony":
-                self.__check_symfony()
+                self.check_symfony()
             elif item == "flutter":
                 self.check_flutter()
             else:
@@ -175,14 +147,14 @@ class Checker:
             i += 1
 
     def init_checker(self):
-        """ gngn """
+        """ Initiate and execute requested tasks to check the system """
         if self.lang == 'react':
-            self.__check_react()
+            self.check_react()
         elif self.lang == 'symfony':
-            self.__check_symfony()
+            self.check_symfony()
         elif self.lang == 'flutter':
             self.check_flutter()
         elif self.lang == 'all':
-            self.__check_bundle()
-        else:
-            print("Hummm")
+            self.check_bundle()
+        # else:
+        #     print("Hummm")
