@@ -33,8 +33,8 @@ def pcolor(message, color):
 
 def print_yes():
     """gngngn"""
-    return pcolor("Yes")
+    return pcolor("Yes", "green")
 
 def print_no():
     """gngngn"""
-    return pcolor("No")
+    return pcolor("No", "red")
